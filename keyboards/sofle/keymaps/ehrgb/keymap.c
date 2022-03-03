@@ -9,23 +9,23 @@
 enum sofle_layers {
     /* _M_XYZ = Mac Os, _W_XYZ = Win/Linux */
     _QWERTY,
-    _LOWER,
-    _RAISE,
-    _ADJUST,
     _COLEMAKDH,
     _COLEMAK,
     _GAMING,
-    _EMPTY
+    _EMPTY,
+    _LOWER,
+    _RAISE,
+    _ADJUST
 };
 
 #define LOWER   MO(_LOWER)
 #define RAISE   MO(_RAISE)
 #define ADJUST  MO(_ADJUST)
 
-#define QWERTY  TO(_QWERTY)
-#define CMKDH   TO(_COLEMAKDH)
-#define COLEMAK TO(_COLEMAK)
-#define GAMING  TO(_GAMING)
+#define QWERTY  DF(_QWERTY)
+#define CMKDH   DF(_COLEMAKDH)
+#define COLEMAK DF(_COLEMAK)
+#define GAMING  DF(_GAMING)
 
 // Encoders are often used for scrolling. tapping to go to the end.
 #define THE_END C(KC_END)
@@ -198,7 +198,8 @@ static void print_state_narrow(void) {
 
 static void print_layer_narrow(void) {
     oled_write_ln_P(PSTR("LAYER"), false);
-    switch (get_highest_layer(layer_state)) {
+    // This respects DF instead of just layer_state
+    switch (get_highest_layer(layer_state|default_layer_state)) {
         // Define you extra layers here.
         case _QWERTY:
             oled_write_P(PSTR("QWERT\n"), false);
@@ -213,16 +214,16 @@ static void print_layer_narrow(void) {
             oled_write_P(PSTR("GAMES\n"), false);
             break;
         case _RAISE:
-            oled_write_P(PSTR("Raise"), false);
+            oled_write_P(PSTR("Raise\n"), false);
             break;
         case _LOWER:
-            oled_write_P(PSTR("Lower"), false);
+            oled_write_P(PSTR("Lower\n"), false);
             break;
         case _ADJUST:
             oled_write_P(PSTR("Adj\n"), false);
             break;
         default:
-            oled_write_ln_P(PSTR("Undef"), false);
+            oled_write_ln_P(PSTR("Undef\n"), false);
     }
 }
 
